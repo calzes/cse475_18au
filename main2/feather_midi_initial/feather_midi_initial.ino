@@ -1,8 +1,9 @@
 
 // Solder closed jumper on bottom!
 #include <Adafruit_FeatherOLED.h>
-
 Adafruit_FeatherOLED oled = Adafruit_FeatherOLED();
+
+#define ARDUINO_SAMD_FEATHER_M0
 
 // See http://www.vlsi.fi/fileadmin/datasheets/vs1053.pdf Pg 31
 #define VS1053_BANK_DEFAULT 0x00
@@ -30,7 +31,6 @@ typedef struct mySoundGesture {
   uint8_t* durations;
 } SoundGesture ;
 
-#define ARDUINO_SAMD_FEATHER_M0
 
 #if defined(__AVR_ATmega32U4__) || defined(ARDUINO_SAMD_FEATHER_M0) || defined(TEENSYDUINO) || defined(ARDUINO_STM32_FEATHER)
   #define VS1053_MIDI Serial1
@@ -98,13 +98,23 @@ void playSounds(SoundGesture* gesture) {
   midiSetChannelBank(0,gesture->bank);
   midiSetInstrument(0,gesture->instrument);
   midiSetChannelVolume(0,gesture->volume);
+
+    midiSetChannelBank(1,gesture->bank);
+  midiSetInstrument(1,gesture->instrument);
+  midiSetChannelVolume(1,gesture->volume);
+
+    midiSetChannelBank(2,gesture->bank);
+  midiSetInstrument(2,gesture->instrument);
+  midiSetChannelVolume(2,gesture->volume);
      
   for (int i=0; i<gesture->len; i++) {
-    //midiNoteOn(1,gesture->notes[i],gesture->volume);
+    midiNoteOn(1,gesture->notes[0],gesture->volume);
     midiNoteOn(0,gesture->notes[i],gesture->volume);
+    midiNoteOn(2,gesture->notes[2],gesture->volume);
     delay(gesture->durations[i] * 20);
-    //midiNoteOff(1,gesture->notes[i],gesture->volume);
+    midiNoteOff(1,gesture->notes[0],gesture->volume);
     midiNoteOff(0,gesture->notes[i],gesture->volume);
+    midiNoteOn(2,gesture->notes[2],gesture->volume);
     delay(20);
     }
     
