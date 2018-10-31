@@ -116,15 +116,15 @@ SoundGesture twinkleSound = {
 };
 
 void loop() {  
-  oled.clearDisplay();  //Don't use this, use SSD library for display
+  oled.clearDisplay(); 
   oled.print("\rSound 1"); oled.display();
   oled.display();
-  //playSounds(&angelSound);
+  playSounds(&angelSound);
   delay(1000);
   
   oled.clearDisplay(); oled.setCursor(0,0);
   oled.print("\rSound 2"); oled.display();
-  //playSounds(&twinkleSound);
+  playSounds(&twinkleSound);
   delay(1000);
   
   oled.clearDisplay(); oled.setCursor(0,0);
