@@ -47,7 +47,7 @@ void setup() {
   oled.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
   // init done
   Serial.println("OLED begun");
-  
+
   // Show image buffer on the display hardware.
   // Since the buffer is intialized with an Adafruit splashscreen
   // internally, this will display the splashscreen.
@@ -115,7 +115,7 @@ SoundGesture twinkleSound = {
   twinkle_durations
 };
 
-uint8_t temple_notes[16] = {50, 55, 60, 65, 50, 55, 60, 65, 
+uint8_t temple_notes[16] = {50, 55, 60, 65, 50, 55, 60, 65,
                     65, 60, 55, 50, 65, 60, 55, 50};
 uint8_t temple_durations[4] = {100, 100, 100, 100};
 SoundGesture templeSound = {
@@ -143,7 +143,7 @@ SoundGesture birdSound = {
 };
 
 
-uint8_t sea_notes[12] = {50, 52, 54, 56, 
+uint8_t sea_notes[12] = {50, 52, 54, 56,
                         52, 54, 56, 58,
                         54, 56, 58, 60};
 uint8_t sea_durations[2] = {200, 200};
@@ -158,13 +158,39 @@ SoundGesture seaSound = {
   sea_durations
 };
 
-void loop() {  
-  oled.clearDisplay(); 
+uint8_t penta_notes[5] = {64, 66, 68, 71, 73};
+uint8_t penta_durations[5] = {35, 35, 35, 35, 35};
+SoundGesture pentaSound = {
+  VS1053_BANK_MELODY,           //Bank for Melody
+  54,                          //Instument = ?
+  127,                          //Volume = 120
+  true,                         //Loop
+  1,                            //1 Voice
+  5,                            //8 Notes
+  penta_notes,
+  penta_durations
+};
+
+uint8_t idk_notes[8] = {67, 70, 62, 72, 64, 65, 67, 60};
+uint8_t idk_durations[8] = {7, 7, 7, 7, 7, 7, 7, 7};
+SoundGesture idkSound = {
+  VS1053_BANK_MELODY,           //Bank for Melody
+  4,                          //Instument = Some Piano
+  127,                          //Volume = 120
+  true,                         //Loop
+  1,                            //1 Voice
+  8,                            //9 Notes
+  idk_notes,
+  idk_durations
+};
+
+void loop() {
+  oled.clearDisplay();
   oled.print("\rSound 1"); oled.display();
   oled.display();
   playSounds(&angelSound);
   delay(1000);
-  
+
   oled.clearDisplay(); oled.setCursor(0,0);
   oled.print("\rSound 2"); oled.display();
   playSounds(&twinkleSound);
@@ -184,7 +210,19 @@ void loop() {
   oled.print("\rSound 5"); oled.display();
   playSounds(&seaSound);
   delay(1000);
-  
+
+  // Random Pentatonic
+  oled.clearDisplay(); oled.setCursor(0,0);
+  oled.print("\rSound 6"); oled.display();
+  playSoundsRandom(&pentaSound, 8);
+  delay(1000);
+
+  // Chased by Serial Killer (Startle)
+  oled.clearDisplay(); oled.setCursor(0,0);
+  oled.print("\rSound 7"); oled.display();
+  playSounds(&idkSound, 6);
+  delay(1000);
+
   oled.clearDisplay(); oled.setCursor(0,0);
 }
 
@@ -196,11 +234,11 @@ void playSounds(SoundGesture* gesture) {
     midiSetInstrument(i,gesture->instrument);
     midiSetChannelVolume(i,gesture->volume);
   }
-     
+
   for (int i=0; i < gesture->len; i++) { //loop through the "len" notes
 
     //Turn on the i'th note of every voice
-    for (int j = 0; j < gesture->voices; j++) { 
+    for (int j = 0; j < gesture->voices; j++) {
       midiNoteOn(j,gesture->notes[i + j * gesture->len],gesture->volume);
     }
 
@@ -210,18 +248,71 @@ void playSounds(SoundGesture* gesture) {
     //Turn of the i'th note of every voice
     for (int j = 0; j < gesture->voices; j++) {
       midiNoteOff(j,gesture->notes[i + j * gesture->len],gesture->volume);
-    } 
+    }
   }
-      
-    
 }
+
+void playSoundsRandom(SoundGesture* gesture, int n) {
+//1 half note is about 1 second
+
+  for(int i=0; i<gesture->voices; i++) {
+    midiSetChannelBank(i,gesture->bank);
+    midiSetInstrument(i,gesture->instrument);
+    midiSetChannelVolume(i,gesture->volume);
+  }
+
+  for (int i=0; i < n; i++) { //loop through the "len" notes
+    int rand_ = random(0, 5);
+    //Turn on the i'th note of every voice
+    for (int j = 0; j < gesture->voices; j++) {
+      midiNoteOn(j,gesture->notes[rand_],gesture->volume);
+    }
+
+    //Delay
+    delay(gesture->durations[0] * 20);
+
+    //Turn of the i'th note of every voice
+    for (int j = 0; j < gesture->voices; j++) {
+      midiNoteOff(j,gesture->notes[rand_],gesture->volume);
+    }
+  }
+}
+
+void playSounds(SoundGesture* gesture, int loop_) {
+//1 half note is about 1 second
+
+  for(int i=0; i<gesture->voices; i++) {
+    midiSetChannelBank(i,gesture->bank);
+    midiSetInstrument(i,gesture->instrument);
+    midiSetChannelVolume(i,gesture->volume);
+  }
+
+  for (int k=1; k <= loop_; k++) {
+    for (int i=0; i < gesture->len; i++) { //loop through the "len" notes
+
+      //Turn on the i'th note of every voice
+      for (int j = 0; j < gesture->voices; j++) {
+        midiNoteOn(j,gesture->notes[i + j * gesture->len],gesture->volume);
+      }
+
+      //Delay
+      delay(gesture->durations[i] * 20);
+
+      //Turn of the i'th note of every voice
+      for (int j = 0; j < gesture->voices; j++) {
+        midiNoteOff(j,gesture->notes[i + j * gesture->len],gesture->volume);
+      }
+    }
+  }
+}
+
 
 void midiSetInstrument(uint8_t chan, uint8_t inst) {
   if (chan > 15) return;
   inst --; // page 32 has instruments starting with 1 not 0 :(
   if (inst > 127) return;
-  
-  VS1053_MIDI.write(MIDI_CHAN_PROGRAM | chan);  
+
+  VS1053_MIDI.write(MIDI_CHAN_PROGRAM | chan);
   delay(10);
   VS1053_MIDI.write(inst);
   delay(10);
@@ -231,7 +322,7 @@ void midiSetInstrument(uint8_t chan, uint8_t inst) {
 void midiSetChannelVolume(uint8_t chan, uint8_t vol) {
   if (chan > 15) return;
   if (vol > 127) return;
-  
+
   VS1053_MIDI.write(MIDI_CHAN_MSG | chan);
   VS1053_MIDI.write(MIDI_CHAN_VOLUME);
   VS1053_MIDI.write(vol);
@@ -240,7 +331,7 @@ void midiSetChannelVolume(uint8_t chan, uint8_t vol) {
 void midiSetChannelBank(uint8_t chan, uint8_t bank) {
   if (chan > 15) return;
   if (bank > 127) return;
-  
+
   VS1053_MIDI.write(MIDI_CHAN_MSG | chan);
   VS1053_MIDI.write((uint8_t)MIDI_CHAN_BANK);
   VS1053_MIDI.write(bank);
@@ -250,7 +341,7 @@ void midiNoteOn(uint8_t chan, uint8_t n, uint8_t vel) {
   if (chan > 15) return;
   if (n > 127) return;
   if (vel > 127) return;
-  
+
   VS1053_MIDI.write(MIDI_NOTE_ON | chan);
   VS1053_MIDI.write(n);
   VS1053_MIDI.write(vel);
@@ -260,7 +351,7 @@ void midiNoteOff(uint8_t chan, uint8_t n, uint8_t vel) {
   if (chan > 15) return;
   if (n > 127) return;
   if (vel > 127) return;
-  
+
   VS1053_MIDI.write(MIDI_NOTE_OFF | chan);
   VS1053_MIDI.write(n);
   VS1053_MIDI.write(vel);
