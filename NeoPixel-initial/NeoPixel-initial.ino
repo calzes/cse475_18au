@@ -63,7 +63,24 @@ void loop() {
   oled.display();
   colorChange(6);
   delay(5000);
+ 
+  oled.clearDisplay();
+  oled.print("\rLight 5"); oled.display();
+  oled.display();
+  breath();
+  delay(5000);
 
+  oled.clearDisplay();
+  oled.print("\rLight 6"); oled.display();
+  oled.display();
+  ironman();
+  delay(5000);
+  
+  oled.clearDisplay();
+  oled.print("\rLight 7"); oled.display();
+  oled.display();
+  flash();
+  delay(5000);
 }
 
 void colorFade(int colors[], int numColors) {
@@ -215,6 +232,7 @@ void mapColor( int time_, int redA, int greenA, int blueA, int redB, int greenB,
   delay(10);
   }
 }
+
 // for a < b
 void blendColor(int locationA, int locationB, int redA, int greenA, int blueA, int redB, int greenB, int blueB) {
   // calculate distance between a and b:
@@ -225,5 +243,69 @@ void blendColor(int locationA, int locationB, int redA, int greenA, int blueA, i
 
   for (int i = 0; i <= distance; i++) {
     strip.setPixelColor(locationA + i, (uint8_t) ((redA * 100 + stepR * i) / 100), (uint8_t) ((greenA * 100 + stepG * i) / 100), (uint8_t) ((100 * blueA + stepB * i) / 100));
+  }
+}
+
+void breath() {
+  int brightness = 0;
+  for (int k = 0; k < 5; k++) {
+    for (int i = 0; i < 10; i++) {
+      brightness = brightness + 20;
+      strip.setBrightness(brightness);
+      setEveryColor(brightness, 0, 0, brightness/3);
+      strip.show();
+      if (i == 9) {
+        delay(500);
+      } else {
+        delay(80);
+      }
+    }
+  
+    for (int j = 0; j < 10; j++) {
+      brightness = brightness - 20;
+      strip.setBrightness(brightness);
+      setEveryColor(brightness, 0, 0, 0);
+      strip.show();
+      if (j == 9) {
+        delay(500);
+      } else {
+        delay(80);
+      }
+    }
+  }
+}
+
+void ironman() {
+  strip.setBrightness(15);
+  for (int k = 0; k < 5; k++) {
+    int brightness = 0;
+    uint32_t bright = strip.Color(0, 0, 255, 255);
+    
+    for(int i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, bright);
+      brightness += 8;
+      Serial.println(brightness);
+      for (int j=0; j<strip.numPixels(); j++) {
+        if (j != i) {
+          strip.setPixelColor(j, strip.Color(0, 0, brightness, brightness/3));
+        }
+      }
+      strip.show();
+      delay(50+5*i);
+    }
+  }
+}
+
+void flash() {
+  for (int j = 0; j <5; j++) {
+    for (int i = 0; i < 10; i++) {
+        setEveryColor(0, 0, 0, 127);
+        strip.show();
+        delay(50);
+        
+        setEveryColor(0,0,0,0);
+        strip.show();
+        delay(50);
+     }
   }
 }
