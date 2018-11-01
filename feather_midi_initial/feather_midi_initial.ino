@@ -115,6 +115,49 @@ SoundGesture twinkleSound = {
   twinkle_durations
 };
 
+uint8_t temple_notes[16] = {50, 55, 60, 65, 50, 55, 60, 65, 
+                    65, 60, 55, 50, 65, 60, 55, 50};
+uint8_t temple_durations[4] = {100, 100, 100, 100};
+SoundGesture templeSound = {
+  VS1053_BANK_MELODY,
+  113,
+  127,
+  true,
+  4,
+  4,
+  temple_notes,
+  temple_durations
+};
+
+uint8_t bird_notes[8] = {55, 60, 65, 70, 55, 60, 65, 70};
+uint8_t bird_durations[8] = {10, 15, 20, 25, 10, 15, 20, 25};
+SoundGesture birdSound = {
+  VS1053_BANK_MELODY,
+  124,
+  127,
+  true,
+  1,
+  8,
+  bird_notes,
+  bird_durations
+};
+
+
+uint8_t sea_notes[12] = {50, 52, 54, 56, 
+                        52, 54, 56, 58,
+                        54, 56, 58, 60};
+uint8_t sea_durations[2] = {200, 200};
+SoundGesture seaSound = {
+  VS1053_BANK_MELODY,
+  123,
+  127,
+  true,
+  3,
+  4,
+  sea_notes,
+  sea_durations
+};
+
 void loop() {  
   oled.clearDisplay(); 
   oled.print("\rSound 1"); oled.display();
@@ -125,6 +168,21 @@ void loop() {
   oled.clearDisplay(); oled.setCursor(0,0);
   oled.print("\rSound 2"); oled.display();
   playSounds(&twinkleSound);
+  delay(1000);
+
+  oled.clearDisplay(); oled.setCursor(0,0);
+  oled.print("\rSound 3"); oled.display();
+  playSounds(&templeSound);
+  delay(1000);
+
+  oled.clearDisplay(); oled.setCursor(0,0);
+  oled.print("\rSound 4"); oled.display();
+  playSounds(&birdSound);
+  delay(1000);
+
+  oled.clearDisplay(); oled.setCursor(0,0);
+  oled.print("\rSound 5"); oled.display();
+  playSounds(&seaSound);
   delay(1000);
   
   oled.clearDisplay(); oled.setCursor(0,0);
