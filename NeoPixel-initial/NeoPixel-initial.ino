@@ -61,7 +61,7 @@ void loop() {
   oled.clearDisplay();
   oled.print("\rLight 4"); oled.display();
   oled.display();
-  colorChange(8);
+  colorChange(6);
   delay(5000);
 
 }
@@ -205,7 +205,11 @@ void mapColor( int time_, int redA, int greenA, int blueA, int redB, int greenB,
   int stepG = (greenB - greenA) * 100 / time_;
   for (int i = 1; i <= time_; i++) {
   for (int j = 0; j <16 ; j++) {
-    strip.setPixelColor(j, (uint8_t) ((redA * 100 + stepR * i) / 100), (uint8_t) ((greenA * 100 + stepG * i) / 100), (uint8_t) ((100 * blueA + stepB * i) / 100));
+   if (j % 2 == 0) {
+      strip.setPixelColor(j, (uint8_t) ((redA * 100 + stepR * i) / 100), (uint8_t) ((greenA * 100 + stepG * i) / 100), (uint8_t) ((100 * blueA + stepB * i) / 100));
+   } else {
+    strip.setPixelColor(j, (uint8_t) ((redB * 100 - stepR * i) / 100), (uint8_t) ((greenB * 100 - stepG * i) / 100), (uint8_t) ((100 * blueB - stepB * i) / 100));
+   }
   }
   strip.show();
   delay(10);
