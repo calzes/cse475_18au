@@ -40,47 +40,53 @@ int fadeColors[16] = {0,0,255,0,       //Dark Blue
                       4,231,98,0};     //Green-ish Blue
 
 void loop() {
+
+  //----------------------------AMBIENT LIGHT-----------------------------------
   oled.clearDisplay();
   oled.print("\rLight 1"); oled.display();
   oled.display();
   colorFade(fadeColors, 4);
   delay(5000);
 
+  //----------------------------ACTIVE LIGHT---------------------------------------
   oled.clearDisplay(); oled.setCursor(0,0);
   oled.print("\rLight 2"); oled.display();
   twinkle_lights(100);
   delay(5000);
-  oled.clearDisplay(); oled.setCursor(0,0);
 
-  oled.clearDisplay();
-  oled.print("\rLight 3"); oled.display();
-  oled.display();
-  sweep(8);
-  delay(5000);
-
-  oled.clearDisplay();
-  oled.print("\rLight 4"); oled.display();
-  oled.display();
-  colorChange(6);
-  delay(5000);
- 
-  oled.clearDisplay();
-  oled.print("\rLight 5"); oled.display();
-  oled.display();
-  breath();
-  delay(5000);
-
-  oled.clearDisplay();
-  oled.print("\rLight 6"); oled.display();
-  oled.display();
-  ironman();
-  delay(5000);
-  
+  //------------------------STARTLE LIGHT (STROBE)---------------------------------
   oled.clearDisplay();
   oled.print("\rLight 7"); oled.display();
   oled.display();
   flash();
   delay(5000);
+
+//  oled.clearDisplay();
+//  oled.print("\rLight 3"); oled.display();
+//  oled.display();
+//  sweep(8);
+//  delay(5000);
+//
+//  oled.clearDisplay();
+//  oled.print("\rLight 4"); oled.display();
+//  oled.display();
+//  colorChange(6);
+//  delay(5000);
+// 
+//  oled.clearDisplay();
+//  oled.print("\rLight 5"); oled.display();
+//  oled.display();
+//  breath();
+//  delay(5000);
+//
+//  oled.clearDisplay();
+//  oled.print("\rLight 6"); oled.display();
+//  oled.display();
+//  ironman();
+//  delay(5000);
+
+    oled.clearDisplay(); oled.setCursor(0,0);
+ 
 }
 
 void colorFade(int colors[], int numColors) {

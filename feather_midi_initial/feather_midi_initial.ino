@@ -185,43 +185,45 @@ SoundGesture idkSound = {
 };
 
 void loop() {
+  //-------------------AMBIENT SOUND-----------------------------------------
   oled.clearDisplay();
   oled.print("\rSound 1"); oled.display();
   oled.display();
   playSounds(&angelSound);
   delay(1000);
 
+  //-----------------ACTIVE SOUND----------------------------------------------
   oled.clearDisplay(); oled.setCursor(0,0);
   oled.print("\rSound 2"); oled.display();
   playSounds(&twinkleSound);
   delay(1000);
 
-  oled.clearDisplay(); oled.setCursor(0,0);
-  oled.print("\rSound 3"); oled.display();
-  playSounds(&templeSound);
-  delay(1000);
-
-  oled.clearDisplay(); oled.setCursor(0,0);
-  oled.print("\rSound 4"); oled.display();
-  playSounds(&birdSound);
-  delay(1000);
-
-  oled.clearDisplay(); oled.setCursor(0,0);
-  oled.print("\rSound 5"); oled.display();
-  playSounds(&seaSound);
-  delay(1000);
-
-  // Random Pentatonic
-  oled.clearDisplay(); oled.setCursor(0,0);
-  oled.print("\rSound 6"); oled.display();
-  playSoundsRandom(&pentaSound, 8);
-  delay(1000);
-
-  // Chased by Serial Killer (Startle)
+  // ------------------STARTLE SOUND-------------------------------------------
   oled.clearDisplay(); oled.setCursor(0,0);
   oled.print("\rSound 7"); oled.display();
   playSounds(&idkSound, 6);
   delay(1000);
+
+//  oled.clearDisplay(); oled.setCursor(0,0);
+//  oled.print("\rSound 3"); oled.display();
+//  playSounds(&templeSound);
+//  delay(1000);
+//
+//  oled.clearDisplay(); oled.setCursor(0,0);
+//  oled.print("\rSound 4"); oled.display();
+//  playSounds(&birdSound);
+//  delay(1000);
+//
+//  oled.clearDisplay(); oled.setCursor(0,0);
+//  oled.print("\rSound 5"); oled.display();
+//  playSounds(&seaSound);
+//  delay(1000);
+//
+//  // Random Pentatonic
+//  oled.clearDisplay(); oled.setCursor(0,0);
+//  oled.print("\rSound 6"); oled.display();
+//  playSoundsRandom(&pentaSound, 8);
+//  delay(1000);
 
   oled.clearDisplay(); oled.setCursor(0,0);
 }
