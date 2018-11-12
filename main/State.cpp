@@ -1,10 +1,14 @@
 #include "Creature.h"
 #include "State.h"
 
-State::State(Creature& creature, char* const name) : _creature(creature) {
+State::State(Creature& creature, char* const name, const uint8_t id) : _creature(creature), _id(id) {
   strncpy(_name, name, MAX_NAME_LEN);
   _name[MAX_NAME_LEN] = 0;
 };
+
+uint8_t State::getId() {
+  return _id;
+}
 
 char* State::getName() {
   return _name;
@@ -26,7 +30,7 @@ bool State::rxPlayEffect(uint8_t len, uint8_t* payload) {
   // TODO: implement
 }
 
-bool State::rxStartle(uint8_t len, uint8_t* payload) {
+bool State::rxStartle(int8_t rssi, uint8_t len, uint8_t* payload) {
   // TODO: implement
 }
 
@@ -38,6 +42,14 @@ State* State::transition() {
   // TODO: implement
 }
 
-uint8_t* State::getGlobalWeights() {
+void State::PIR() {
+  // TODO: implement
+}
+
+void State::startled(uint8_t strength, uint8_t id) {
+  // TODO: implement
+}
+
+int8_t* State::getGlobalWeights() {
   return _globalWeights;
 }

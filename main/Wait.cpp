@@ -1,18 +1,17 @@
 #include "Wait.h"
+#include "Neopixel.h"
 #include "Debug.h"
 
 constexpr uint8_t Wait::_localWeights[];
 
 uint8_t Wait::getNumRepeats() {
- return 255;
+ return 32;
 }
 
 State* Wait::transition() {
- return this;
-}
-
-uint8_t Wait::getId() {
-  return 0;
+  Midi::setSound(Midi::getSound() ? 0 : 1);
+  Neopixel::setLight(Neopixel::getLight() ? 0 : 1);
+  return this;
 }
 
 void Wait::loop(uint32_t dt) {
@@ -27,10 +26,10 @@ float Wait::getStartleFactor() {
   return 9999999999;
 }
 
-bool Wait::rxStartle(uint8_t len, uint8_t* payload) {}
+bool Wait::rxStartle(int8_t rssi, uint8_t len, uint8_t* payload) {}
 
 void Wait::PIR() {
   dprintln("PIR triggered!");
 }
 
-void Wait::startled() {}
+void Wait::startled(uint8_t strength, uint8_t id) {}

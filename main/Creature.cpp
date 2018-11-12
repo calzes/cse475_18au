@@ -3,13 +3,14 @@
 #include "State.h"
 #include "Wait.h"
 #include "Midi.h"
+#include "Neopixel.h"
 
 #include <cmath>
 
 // TODO: put your kit number here
 #define KIT_NUM 0
 
-#define VERSION "1.0"
+#define VERSION "1.4"
 
 // Returns current battery voltage
 inline float getBatteryVoltage() {
@@ -20,7 +21,7 @@ inline float getBatteryVoltage() {
 Creature::Creature() {
   // Initialize _next to be the Wait state, so we will immediately transition into it on the first loop.
   _next = new Wait(*this);
-  _state = nullptr;
+  _prev = _state = nullptr;
 
   if (KIT_NUM < 0) {
     Serial.print(F("Invalid kit number: "));
@@ -80,6 +81,8 @@ void Creature::loop() {
     dprintln("PIR reset");
     _PIR = newPIR;
   }
+
+  Neopixel::loop();
 }
 
 bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, int8_t rssi) {
@@ -157,7 +160,7 @@ bool Creature::_rxSetGlobals(uint8_t len, uint8_t* payload) {
     dprint(F("\tCYCLE_TIME: ")); dprintln(GLOBALS.CYCLE_TIME);
   }
 
-
+  // Handle changes in num creatures.
   if (old.NUM_CREATURES != GLOBALS.NUM_CREATURES) {
     dprint(F("Resizing creature arrays from "));
     dprint(old.NUM_CREATURES);
@@ -172,6 +175,11 @@ bool Creature::_rxSetGlobals(uint8_t len, uint8_t* payload) {
     _creatureStates = new uint8_t[GLOBALS.NUM_CREATURES + 1]();
   }
 
+  // Handle change in tx power.
+  if (old.TX_POWER != GLOBALS.TX_POWER) {
+    _rf69.setTxPower(GLOBALS.TX_POWER, true);
+  }
+
   return true;
 }
 
@@ -180,12 +188,13 @@ void Creature::_rxStop() {
 }
 
 bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
-  if (len != 1) {
+  if (len != 2) {
     Serial.print(F("Start packet has invalid payload length: "));
     Serial.println(len);
     return false;
   }
   uint8_t mode = payload[0];
+  uint8_t stateId = payload[1];
   // TODO: implement
   return true;
 }
@@ -250,7 +259,7 @@ void Creature::_txSendState(uint8_t oldState, uint8_t newState) {
 
 void Creature::_pollRadio() {
   // Poll radio for packets
-  if (_rf69.waitAvailableTimeout(50)) {
+  if (_rf69.waitAvailableTimeout(25)) {
     uint8_t len = sizeof(_buf);
 
     // Should be a message available
@@ -303,16 +312,31 @@ void Creature::_pollRadio() {
 }
 
 void Creature::_transition(State* const state) {
-  State* const old = _state;
-  _state = state;
+  if (state == nullptr) {
+    Serial.println("Cannot transition to null state!");
+    return;
+  }
 
-  if (state != old) {
-    if (old != nullptr) {
-      delete old;
-      _txSendState(old->getId(), state->getId());
-    } else {
-      _txSendState(0, state->getId());
+  State* const old = _state;
+
+  if (old == nullptr || state->getId() != old->getId()) {
+    Serial.print("Transitioning from state ");
+    Serial.print(old == nullptr ? -1 : old->getId());
+    Serial.print(" to ");
+    Serial.println(state->getId());
+
+    _state = state;
+
+    if (_prev != nullptr && _prev != state) {
+      // Delete the current _prev if it's not null, and it's not what we're currently transitioning to.
+      delete _prev;
     }
+
+    _txSendState(old == nullptr ? 0 : old->getId(), state->getId());
+    _prev = old;
+  } else if (state != old){
+    // No need to transition, free this memory if it is not the same state.
+    delete state;
   }
 
   _remainingRepeats = _state->getNumRepeats();
@@ -342,10 +366,9 @@ void Creature::_updateDisplay() {
 
   oled.setCursor(0, 22);
   oled.print(F("Sound: "));
-  oled.print(Midi::currentIdx);
+  oled.print(Midi::getSound());
 
-  // TODO(rfrowe): update with real light index, when added
-  uint8_t lightIdx = -1;
+  uint8_t lightIdx = Neopixel::getLight();
   oled.setCursor((OLED_WIDTH - 8 - (lightIdx > 9) - (lightIdx > 99)) * 6, 22);
   oled.print(F("Light: "));
   oled.print(lightIdx);
@@ -369,9 +392,7 @@ void Creature::setup() {
   oled.setBatteryVisible(true);
   _updateDisplay();
 
-  strip.begin();
-  strip.setBrightness(5);
-  strip.show();
+  Neopixel::setup();
 
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
@@ -396,10 +417,7 @@ void Creature::setup() {
   Serial.print(RFM69_FREQ);
   Serial.println(F("MHz"));
 
-  // Setup MIDI
-  VS1053_MIDI.begin(31250);
-  Midi::tcConfigure(1000);  // Hz
-  Midi::tcStartCounter();
+  Midi::setup();
 
   pinMode(PIR_PIN, INPUT);
   _PIR = digitalRead(PIR_PIN);
