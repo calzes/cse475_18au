@@ -110,10 +110,12 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
       // TODO: Implement
       return true;
     case PID_BROADCAST_STATES:
-      // TODO: Implement
+      if (srcAddr != CONTROLLER_ADDR) return false;
+      _rxBroadcastStates(len, payload);
       return true;
     case PID_STARTLE:
-      // TODO: Implement
+      if (srcAddr != CONTROLLER_ADDR) return false;
+      _rxStartle(rssi, len, payload);
       return true;
     default:
       Serial.print(F("Received packet of unknown type: "));
