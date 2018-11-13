@@ -66,7 +66,14 @@ void State::txStartle(uint8_t strength, uint8_t id) {
 }
 
 State* State::transition() {
-  // TODO: implement
+  uint8_t N = GLOBALS.NUM_CREATURES;
+  uint8_t* P[N] = probabilities();
+  uint8_t R = rand(0,P[N]);
+  for(int i = 1; i<=N; i++{
+    if(R < P[i]){
+      setNextState(_creatureStates[i]);
+    }
+  } 
 }
 
 //Create a new function in h for the transition math
@@ -76,22 +83,33 @@ uint8_t* probabilities() {//???
   uint8_t* D[N] = inverseDistances(_creatureDistances);
   float Ls[numStates];
 
-  for(int j = 1; j <= numStates; j++) {
-
-    //calculate first sum: how many creatures are in the j'th state
-    uint8_t sum1;
-    for(int k=0; k < N; k++) {
-      sum1 += ((_creatureStates[k] == j) ? 1 : 0);
+  float P_i[N];
+  for(int i = 1; i<=N; i++{
+    float P_max = 0;
+    float P_j[N];
+    for(int j = 1; j <= numStates; j++) {
+  
+      //calculate first sum: how many creatures are in the j'th state
+      uint8_t sum1;
+      for(int k=0; k < N; k++) {
+        sum1 += ((_creatureStates[k] == j) ? 1 : 0);
+      }
+      Ls[j] = _globalWeights[j] * (N - sum1)/N;
+      
+      if(P_max < _localWeights[j] + Ls[j]*D[j]*sum1) {
+        P_max = _localWeights[j] + Ls[j]*D[j]*sum1;
+      }
+      P_j[j] = P_max;
+      P_i[i] += P_j[j];
     }
-    Ls[j] = _globalWeights[j] * (N - sum1)/N;
-
   }
+
   //Complete this calculation d times
   /*Needs:C =  _creatureStates, N = number of creatures, L_j (scalar global weight for next state j)
           W = _localWeights of the current state, D = inverse _creatureDistances
   */
 
-
+  return P_i;
 }
 
 int8_t* inverseDistances(int8_t *creatureDistances) {
