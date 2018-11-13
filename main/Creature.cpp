@@ -8,7 +8,7 @@
 #include <cmath>
 
 // TODO: put your kit number here
-#define KIT_NUM 0
+#define KIT_NUM 11
 
 #define VERSION "1.4"
 
@@ -124,6 +124,33 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
 
 void Creature::_updateDistance(uint8_t addr, int8_t rssi) {
   // TODO: implement
+
+  /*Can't implement this unless we have some place for the creature's address internally stored. maybe instead of uint8_t* arrays, there should be
+  an array of structs, each struct containing different information aobut each creature.
+
+  struct otherCreatures{
+    uint8_t addr;
+    int8_t* distance;
+    State* creatureState;
+  }
+
+  otherCreatures _otherCreatures[GLOBALS.NUM_CREATURES];
+  for (int i = 0; i < NUM_CREATURES; i++) {
+    _otherCreatures[i]->addr = i+1;
+    _otherCreatures[i]->distance = 0;
+    _otherCreatures[i]->creatureState = NULL;
+  }
+
+  // for (int i = 0; i < NUM_CREATURES; i++) {
+  //   if (_otherCreatures[i]->addr == addr) {
+  //     _otherCreatures[i]->distance = (_otherCreatures[i]->distance + rssi) / 2;
+  //       return;
+  //   }
+  // }
+  */
+
+  _creatureDistances[addr - 1] = (_creatureDistances[addr - 1] + rssi) / 2;
+
 }
 
 bool Creature::_rxSetGlobals(uint8_t len, uint8_t* payload) {
@@ -195,12 +222,17 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
   }
   uint8_t mode = payload[0];
   uint8_t stateId = payload[1];
+  // transition into a state depending on the mode. "0x8XXX for continue, 0x0000 for random start, 0x00XX for state XX."
+  //_transition();
   // TODO: implement
   return true;
 }
 
 bool Creature::_rxBroadcastStates(uint8_t len, uint8_t* payload) {
   // TODO: implement
+    for (int i = 0; i < len; i++) {
+        _creatureStates[i] = payload[i];
+    }
   return true;
 }
 

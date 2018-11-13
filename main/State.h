@@ -15,6 +15,8 @@ class State {
   State(Creature& creature, char* const name, const uint8_t id);
   State(const State&) = delete;
 
+
+
   /**
    * If your subclass dynamically allocate data (with malloc, calloc, or new),
    * you MUST override the destructor and delete it to avoid memory leaks.
@@ -106,7 +108,7 @@ class State {
    * @param payload Should be the startle strength and id.
    */
   virtual bool rxStartle(int8_t rssi, uint8_t len, uint8_t* payload);
-  
+
  protected:
 
   // Event handlers

@@ -216,7 +216,7 @@ class Creature {
   uint32_t _lastStartle, _lastLoop;
 
   /** State ids for all creatures 0 through NUM_CREATURES. Should be of size GLOBALS.NUM_CREATURES + 1 */
-  uint8_t *_creatureStates;
+      uint8_t *_creatureStates;
 
   /** Running average of pseudodistance (RSSI) for all creatures 0 through NUM_CREATURES. Should be of size GLOBALS.NUM_CREATURES + 1 */
   int8_t *_creatureDistances;
