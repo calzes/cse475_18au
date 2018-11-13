@@ -226,6 +226,13 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
   uint8_t stateId = payload[1];
   // transition into a state depending on the mode. "0x8XXX for continue, 0x0000 for random start, 0x00XX for state XX."
   //_transition();
+  if(mode == 0x00){
+    _transition(0x00XX);
+  } else if(mode == 0x01) {
+    _transition(0x8XXX);
+  } else {
+    _transition(0x0000);
+  }
   // TODO: implement
   return true;
 }
