@@ -115,7 +115,7 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
       return true;
     case PID_STARTLE:
       if (srcAddr != CONTROLLER_ADDR) return false;
-      _rxStartle(rssi, len, payload);
+      _state->rxStartle(rssi, len, payload);
       return true;
     default:
       Serial.print(F("Received packet of unknown type: "));
@@ -226,12 +226,13 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
   uint8_t stateId = payload[1];
   // transition into a state depending on the mode. "0x8XXX for continue, 0x0000 for random start, 0x00XX for state XX."
   //_transition();
-  if(mode == 0x00){
-    _transition(0x00XX);
-  } else if(mode == 0x01) {
-    _transition(0x8XXX);
+  if (mode >> 7 == 1) {
+    _transition(_state);
+} else if (mode == 0 && stateId != 0) {
+     uint8_t r = (uint8_t) random(8);
+    _transition(getNewState(r));
   } else {
-    _transition(0x0000);
+    _transition(getNewState(stateID));
   }
   // TODO: implement
   return true;
@@ -467,4 +468,17 @@ void Creature::setup() {
 Creature::~Creature() {
   delete[] _creatureDistances;
   delete[] _creatureStates;
+}
+
+State* Creature::createState(uint8_t stateID) {
+    State result;
+    switch (stateID) {
+        case 1: result = new Ambient1(&this);
+        case 2: result = new Active1(&this);
+        case 3: result = new Ambient2(&this);
+        case 4: result = new Active2(&this);
+        case 5: result = new Ambient3(&this);
+        case 6: result = new Active3(&this);
+    }
+    return &result;
 }

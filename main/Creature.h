@@ -121,6 +121,8 @@ class Creature {
     return _creatureDistances;
   }
 
+  State* createState(uint8_t stateID);
+  
   // Run after construction but before loop.
   void setup();
 
