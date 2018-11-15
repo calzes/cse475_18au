@@ -5,6 +5,16 @@
 #include "Midi.h"
 #include "Neopixel.h"
 
+#include "Active1.h"
+#include "Active2.h"
+#include "Active3.h"
+
+#include "Ambient1.h"
+#include "Ambient2.h"
+#include "Ambient3.h"
+
+
+
 #include <cmath>
 
 // TODO: put your kit number here
@@ -230,9 +240,9 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
     _transition(_state);
 } else if (mode == 0 && stateId != 0) {
      uint8_t r = (uint8_t) random(8);
-    _transition(getNewState(r));
+    _transition(createState(r));
   } else {
-    _transition(getNewState(stateID));
+    _transition(createState(stateId));
   }
   // TODO: implement
   return true;
@@ -471,14 +481,14 @@ Creature::~Creature() {
 }
 
 State* Creature::createState(uint8_t stateID) {
-    State result;
+    State * result;
     switch (stateID) {
-        case 1: result = new Ambient1(&this);
-        case 2: result = new Active1(&this);
-        case 3: result = new Ambient2(&this);
-        case 4: result = new Active2(&this);
-        case 5: result = new Ambient3(&this);
-        case 6: result = new Active3(&this);
+        case 1: result = new Ambient1(*this);
+        case 2: result = new Active1(*this);
+        case 3: result = new Ambient2(*this);
+        case 4: result = new Active2(*this);
+        case 5: result = new Ambient3(*this);
+        case 6: result = new Active3(*this);
     }
-    return &result;
+    return result;
 }

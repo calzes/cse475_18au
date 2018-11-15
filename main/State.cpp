@@ -110,14 +110,14 @@ return NULL;
 
   //return P_i;
 //}
-
-int8_t* inverseDistances(int8_t *creatureDistances) {
-  uint8_t* inverseDistances[_creature.GLOBALS.NUM_CREATURES]
-  for (int i = 0; i < _creature.GLOBALS.NUM_CREATURES; i++) {
-    if (creatureDistances[i] = 0) { inverseDistances[i] = 0; }
-    else { inverseDistances[i] = 1/creatureDistances[i]; }
-  }
-}
+//
+//int8_t* inverseDistances(int8_t *creatureDistances) {
+//  uint8_t* inverseDistances[_creature.GLOBALS.NUM_CREATURES]
+//  for (int i = 0; i < _creature.GLOBALS.NUM_CREATURES; i++) {
+//    if (creatureDistances[i] = 0) { inverseDistances[i] = 0; }
+//    else { inverseDistances[i] = 1/creatureDistances[i]; }
+//  }
+//}
 
 
 void State::PIR() {
