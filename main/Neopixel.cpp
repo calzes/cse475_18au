@@ -61,3 +61,23 @@ void Neopixel::rainbow(uint32_t dt) {
     offset++;
   }
 }
+
+void Neopixel::twinkle_lights(uint32_t dt) {
+  //Set brightness to 15?
+  _strip.setBrightness(15);
+  //Delay between changes?
+  if(dt > 100) {
+    // First turn off all lights
+    for (uint16_t i = 0; i < NEOPIXEL_COUNT; i++) { _strip.setPixelColor(0,0,0,0); }
+    // Choose random number of pixels to be on at the same time between 1-4
+    int numLightsOn = rand() % 4 + 1;
+
+    for (int i = 0; i<numLightsOn; i++) {
+      //For each pixel that's on, choose which pixel it is from 0-15
+      uint16_t pixelNum = rand() % NEOPIXEL_COUNT;
+      //Set the color of the pixel to blue
+      _strip.setPixelColor(pixelNum, 0, 0, 255, 0);
+    }
+    _strip.show();
+  }
+}
