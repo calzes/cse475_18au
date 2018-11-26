@@ -62,6 +62,18 @@ void Neopixel::rainbow(uint32_t dt) {
   }
 }
 
+void Neopixel::strobe(uint32_t dt) {
+    static bool on = false;
+    if (dt > 50) {
+        if (on) {
+            for (uint16_t i = 0; i < NEOPIXEL_COUNT; i++) { _strip.setPixelColor(255,255,255,255); }
+        } else {
+            for (uint16_t i = 0; i < NEOPIXEL_COUNT; i++) { _strip.setPixelColor(0,0,0,0); }
+        }
+        on = !on;
+    }
+}
+
 void Neopixel::twinkle_lights(uint32_t dt) {
   //Set brightness to 15?
   _strip.setBrightness(15);

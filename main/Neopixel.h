@@ -11,9 +11,10 @@ class Neopixel {
   /** List of all neopixel functions in this class. Each takes dt, the difference in time since the last call. */
   static void rainbow(uint32_t dt);
   static void twinkle_lights(uint32_t dt);
+  static void strobe(uint32_t dt);
 
   /** Array of all light effects, in a fixed order, used to assign an index to each. Add your effects to this! */
-  static constexpr void (*LIGHTS[3])(uint32_t) = {nullptr, &rainbow, &twinkle_lights};
+  static constexpr void (*LIGHTS[4])(uint32_t) = {nullptr, &rainbow, &twinkle_lights, &strobe};
 
   /**
    * Use this to set the current light gesture.
