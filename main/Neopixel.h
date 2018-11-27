@@ -12,9 +12,14 @@ class Neopixel {
   static void rainbow(uint32_t dt);
   static void twinkle_lights(uint32_t dt);
   static void strobe(uint32_t dt);
+  static void lightning(uint32_t dt);
+  static void SlowRotation(uint32_t dt);
+
+  static void SlowRotation_private(uint32_t dt, int colors[], int numColors);
+  static void setEveryColor(int r, int g, int b, int w);
 
   /** Array of all light effects, in a fixed order, used to assign an index to each. Add your effects to this! */
-  static constexpr void (*LIGHTS[4])(uint32_t) = {nullptr, &rainbow, &twinkle_lights, &strobe};
+  static constexpr void (*LIGHTS[6])(uint32_t) = {nullptr, &rainbow, &twinkle_lights, &strobe, &lightning, &SlowRotation};
 
   /**
    * Use this to set the current light gesture.

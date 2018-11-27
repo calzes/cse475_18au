@@ -93,3 +93,71 @@ void Neopixel::twinkle_lights(uint32_t dt) {
     _strip.show();
   }
 }
+
+void Neopixel::lightning(uint32_t dt) {
+  _strip.setBrightness(15);
+  static bool on = false;
+  int light_on_interval = rand() % 50 + 50; //randon number between 50 to 99
+  int light_off_interval = rand() % 350 + 50; //randon number between 50 to 399
+  if (on) {
+    if (dt > light_on_interval) {
+        if (on) {
+          setEveryColor(0, 0, 0, 127);
+          _strip.show();
+          on = !on;
+        }
+    }
+  } else {
+    if (dt > light_off_interval) {
+        if (on) {
+          setEveryColor(0, 0, 0, 127);
+          _strip.show();
+          on = !on;
+        }
+    }
+  }
+}
+
+void Neopixel::SlowRotation(uint32_t dt) {
+  int fadeColors[16] = {0,0,255,0,       //Dark Blue
+                        0,161,228,0,     //Light Blue
+                        220,164,0,0,     //Dark Yellow
+                        4,231,98,0};     //Green-ish Blue
+  SlowRotation_private(dt, fadeColors, 4);
+}
+
+void Neopixel::SlowRotation_private(uint32_t dt, int colors[], int numColors) {
+  static int brightIndex = 0;
+  static int dimIndex = 0;
+  static int color = 0;
+  static int brightness = 0;
+  static bool changeColor = false;
+  setEveryColor(colors[0], colors[1], colors[2], colors[3]);
+  if(dt > 100) {
+    if (brightIndex < 20) {
+      _strip.setBrightness(brightness + 1);
+      _strip.show();
+      brightIndex++;
+    } else if (changeColor == false) {
+      setEveryColor(colors[color * numColors], colors[(color* numColors)+1], colors[(color* numColors)+2], colors[(color* numColors)+3]);
+      color++;
+    } else if (dimIndex < 20) {
+      _strip.setBrightness(brightness - 1);
+      _strip.show();
+      dimIndex++;
+    } else { // if above three has been completed
+      brightIndex = 0;
+      dimIndex = 0;
+      changeColor = false;
+      if (color == (numColors - 1)) {
+        color = 0;
+      }
+    }
+  }
+}
+
+void Neopixel::setEveryColor(int r, int g, int b, int w) {
+ for (uint16_t i = 0; i < 16; i++) {
+   _strip.setPixelColor(i, (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)w);
+  }
+}
