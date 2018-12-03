@@ -36,6 +36,7 @@ class State;
 #define PID_STARTLE 0x6
 #define PID_SEND_STATE 0x7
 
+#define DISTANCE_ALPHA 0.65
 #define WAIT 0
 #define STARTLE 255
 
@@ -58,7 +59,6 @@ class Creature {
   Creature& operator=(Creature const&) = delete;
   ~Creature();
 
-  Adafruit_FeatherOLED oled = Adafruit_FeatherOLED();
   struct Globals GLOBALS = {
     /* TX_POWER */                  14,   // uint16_t
     /* STARTLE_RAND_MIN */          100,  // uint8_t
@@ -66,9 +66,9 @@ class Creature {
     /* STARTLE_MAX */               255,  // uint8_t
     /* STARTLE_THRESHOLD */         150,  // uint8_t
     /* STARTLE_DECAY */             30,   // uint8_t
-    /* NUM_CREATURES */             30,   // uint8_t
-    /* STARTLE_THRESHOLD_DECAY */   0.9,  // float32
-    /* CYCLE_TIME in ms */          100,  // uint16_t
+    /* NUM_CREATURES */             35,   // uint8_t
+    /* STARTLE_THRESHOLD_DECAY */   0.01,  // float32
+    /* CYCLE_TIME in ms */          1000,  // uint16_t
   };
 
   /**
@@ -139,6 +139,9 @@ class Creature {
 
   // Called during main loop.
   void loop();
+
+  State* getState(int id);
+
  private:
   /**
    * Called during loop to poll radio for new received packets. Calls Creature::rx with any
@@ -239,6 +242,8 @@ class Creature {
 
   /** Radio object for tx/rx */
   RH_RF69 _rf69 = RH_RF69(RFM69_CS, RFM69_INT);
+
+  Adafruit_FeatherOLED _oled = Adafruit_FeatherOLED();
 
   uint8_t _txCount, _rxCount;
 
