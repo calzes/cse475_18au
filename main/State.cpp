@@ -36,49 +36,6 @@ bool State::rxPlayEffect(uint8_t len, uint8_t* payload) {
 
 // Not sure if STARTLE_DECAY and STARTLE_FACTOR are defined to be used like this
 bool State::rxStartle(int8_t rssi, uint8_t len, uint8_t* payload) {
-<<<<<<< HEAD
-  // TODO: implement
- uint8_t strength = payload[0];
- uint8_t id = payload[1];
- double startleWeight = (double) (_creature.GLOBALS.STARTLE_DECAY - rssi) / _creature.GLOBALS.STARTLE_DECAY;
- double decay = sigmoid(startleWeight) * 0.9; // startle factor is 0.9
- if (decay * strength > _creature.GLOBALS.STARTLE_THRESHOLD) {
-    Serial.println("Startled. I'm so scared wow");
- }
-////Globals.STARTLE_DECAY?
-}
-
-double State::sigmoid(double x) {
-    return 1 / (1 + exp(-1 * x));
-}
-
-void State::txStartle(uint8_t strength, uint8_t id) {
-  uint8_t payload[2] = {strength, id};
-  _creature.tx((uint8_t)PID_STARTLE, (uint8_t)BROADCAST_ADDR, (uint8_t)2, payload);
-  return;
-  }
-  /**
-   * Transmits a packet to dst_addr from this creature.
-   *
-   * @param pid Packet identifier.
-   * @param dst_addr  Address of the intended recipient of this packet.
-   * @param len Length of the payload, in bytes
-   * @param payload An array of bytes to use as the payload.
-   * @returns true iff the packet was successfully sent, false otherwise.
-
-  bool tx(const uint8_t pid, const uint8_t dstAddr, const uint8_t len, uint8_t* const payload); */
-
-State* State::transition() {
-//  uint8_t N = GLOBALS.NUM_CREATURES;
-//  uint8_t* P[N] = probabilities();
-//  uint8_t R = rand(0,P[N]);
-//  for(int i = 1; i<=N; i++{
-//    if(R < P[i]){
-//      setNextState(_creatureStates[i]);
-//    }
-//  } 
-return NULL;
-=======
   if (len != 2) {
     return false;
   }
@@ -97,7 +54,6 @@ void State::txStartle(uint8_t strength, uint8_t id) {
   pld[0] = strength;
   pld[1] = id;
   _creature.tx(6, 255, 2, pld);
->>>>>>> eac846eb4e444b2215aff2a30a0eb0324ced55c3
 }
 
 //Create a new function in h for the transition math
@@ -112,14 +68,14 @@ void State::txStartle(uint8_t strength, uint8_t id) {
 //    float P_max = 0;
 //    float P_j[N];
 //    for(int j = 1; j <= numStates; j++) {
-//  
+//
 //      //calculate first sum: how many creatures are in the j'th state
 //      uint8_t sum1;
 //      for(int k=0; k < N; k++) {
 //        sum1 += ((_creatureStates[k] == j) ? 1 : 0);
 //      }
 //      Ls[j] = _globalWeights[j] * (N - sum1)/N;
-//      
+//
 //      if(P_max < _localWeights[j] + Ls[j]*D[j]*sum1) {
 //        P_max = _localWeights[j] + Ls[j]*D[j]*sum1;
 //      }

@@ -139,19 +139,9 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
     case PID_PLAY_EFFECT:
       return _state->rxPlayEffect(len, payload);
     case PID_BROADCAST_STATES:
-<<<<<<< HEAD
-      if (srcAddr != CONTROLLER_ADDR) return false;
-      _rxBroadcastStates(len, payload);
-      return true;
-    case PID_STARTLE:
-      if (srcAddr != CONTROLLER_ADDR) return false;
-      _state->rxStartle(rssi, len, payload);
-      return true;
-=======
       return _rxBroadcastStates(len, payload);
     case PID_STARTLE:
       return _state->rxStartle(rssi, len, payload);
->>>>>>> eac846eb4e444b2215aff2a30a0eb0324ced55c3
     default:
       Serial.print(F("Received packet of unknown type: "));
       Serial.print(pid, HEX);
@@ -160,41 +150,10 @@ bool Creature::_rx(uint8_t pid, uint8_t srcAddr, uint8_t len, uint8_t* payload, 
 }
 
 void Creature::_updateDistance(uint8_t addr, int8_t rssi) {
-<<<<<<< HEAD
-  // TODO: implement
-
-  /*Can't implement this unless we have some place for the creature's address internally stored. maybe instead of uint8_t* arrays, there should be
-  an array of structs, each struct containing different information aobut each creature.
-
-  struct otherCreatures{
-    uint8_t addr;
-    int8_t* distance;
-    State* creatureState;
-  }
-
-  otherCreatures _otherCreatures[GLOBALS.NUM_CREATURES];
-  for (int i = 0; i < NUM_CREATURES; i++) {
-    _otherCreatures[i]->addr = i+1;
-    _otherCreatures[i]->distance = 0;
-    _otherCreatures[i]->creatureState = NULL;
-  }
-
-  // for (int i = 0; i < NUM_CREATURES; i++) {
-  //   if (_otherCreatures[i]->addr == addr) {
-  //     _otherCreatures[i]->distance = (_otherCreatures[i]->distance + rssi) / 2;
-  //       return;
-  //   }
-  // }
-  */
-
-  _creatureDistances[addr - 1] = (_creatureDistances[addr - 1] + rssi) / 2;
-
-=======
   if (addr <= GLOBALS.NUM_CREATURES) {
     // Update gradually so we don't move too much
     _creatureDistances[addr] = _creatureDistances[addr] * DISTANCE_ALPHA + rssi * (1 - DISTANCE_ALPHA);
   }
->>>>>>> eac846eb4e444b2215aff2a30a0eb0324ced55c3
 }
 
 uint8_t Creature::updateThreshold() {
@@ -275,20 +234,6 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
     return false;
   }
   uint8_t mode = payload[0];
-<<<<<<< HEAD
-  uint8_t stateId = payload[1];
-  // transition into a state depending on the mode. "0x8XXX for continue, 0x0000 for random start, 0x00XX for state XX."
-  //_transition();
-  if (mode >> 7 == 1) {
-    _transition(_state);
-} else if (mode == 0 && stateId != 0) {
-     uint8_t r = (uint8_t) random(8);
-    _transition(createState(r));
-  } else {
-    _transition(createState(stateId));
-  }
-  // TODO: implement
-=======
 
   Serial.print(F("Mode: "));Serial.println(mode);
   if (mode) {
@@ -302,21 +247,13 @@ bool Creature::_rxStart(uint8_t len, uint8_t* payload) {
     _transition(getState(nextStateID));
   }
 
->>>>>>> eac846eb4e444b2215aff2a30a0eb0324ced55c3
   return true;
 }
 
 bool Creature::_rxBroadcastStates(uint8_t len, uint8_t* payload) {
-<<<<<<< HEAD
-  // TODO: implement
-    for (int i = 0; i < len; i++) {
-        _creatureStates[i] = payload[i];
-    }
-=======
   for (int i = 0; i < min(len, GLOBALS.NUM_CREATURES); i++) {
     _creatureStates[i + 1] = payload[i];
   }
->>>>>>> eac846eb4e444b2215aff2a30a0eb0324ced55c3
   return true;
 }
 
