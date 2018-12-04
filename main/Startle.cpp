@@ -15,7 +15,7 @@ void Startle::loop(uint32_t dt) {
     case 2: Neopixel::setLight(0x0D); break;
     case 3: Neopixel::setLight(0x12); break;
   }
-  Midi::setSound(rand() % 4 ? 0x12 : rand() % 3 + 0x25); //sounds: 0x12, 0x25-0x27
+  Midi::setSound((rand() % 4) ? 0x12 : (rand() % 3 + 0x25)); //sounds: 0x12, 0x25-0x27
 }
 
 const uint8_t* Startle::getLocalWeights() {
