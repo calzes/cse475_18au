@@ -123,8 +123,10 @@ double sigmoid(double x);
 
   /** Reference to the creature this is a state in */
   Creature& _creature;
-
-  int8_t _globalWeights[ACTIVE_STATES + AMBIENT_STATES] = { 1, -1, 3, 1, 1, 6 };
+  
+  //states: ambient1, active 1, ambient2, active 2, ambient 3, active 3
+  //        weather, birds, insects, bells, winds, melodics
+  int8_t _globalWeights[ACTIVE_STATES + AMBIENT_STATES] = { 5, 2, 3, -1, 10, 2 };
 
  private:
   char _name[MAX_NAME_LEN + 1];

@@ -12,7 +12,9 @@ class Ambient2 : public State {
   const uint8_t* getLocalWeights();
   float getStartleFactor();
 private:
-  static constexpr uint8_t _localWeights[ACTIVE_STATES + AMBIENT_STATES] = {1, 1, 1, 1, 1, 1};
+  //from insects we go to weather, winds, insects, melodics, bells, birds
+  //states: ambient1, active 1, ambient2, active 2, ambient 3, active 3
+  static constexpr uint8_t _localWeights[ACTIVE_STATES + AMBIENT_STATES] = {10, 1, 6, 2, 8, 4};
 };
 
 #endif  // _AMBIENT2_H_
