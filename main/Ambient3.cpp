@@ -18,7 +18,7 @@ void Ambient3::loop(uint32_t dt) {
     case 1: Neopixel::setLight(0x0B); break;
     case 2: Neopixel::setLight(0x0C); break;
   }
-  Midi::setSound(6);
+  Midi::setSound(rand() % 2 ? 0x15 : 0x28); //sounds: 0x15 or 0x28
 }
 
 const uint8_t* Ambient3::getLocalWeights() {
