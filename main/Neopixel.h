@@ -33,25 +33,25 @@ class Neopixel {
   /** Array of all light effects, in a fixed order, used to assign an index to each. Add your effects to this! */
   static constexpr bool (*LIGHTS[])(uint32_t) = {
     nullptr,            // 00
-    &rainbow,           // 01
-    &smoothRainbow,     // 02
-    &strobe,            // 03
-    &bell,              // 04
-    &melodic,           // 05
-    &insects,           // 06
-    &wavez,             // 07
-    &rotating,          // 08
-    &lightning,         // 09
-    &wind,              // 0A
-    &blinkDot,          // 0B
-    &twinkleLights,     // 0C
-    &strobeRand,        // 0D
-    &rotatingSlowly,    // 0E
-    &rainCycle,         // 0F
-    &quadRand,          // 10
-    &fire,              // 11
-    &flashing,          // 12
-    &bell2              // 13
+    &rainbow,           // 01 weather    ambient1
+    &smoothRainbow,     // 02 birds      active1
+    &strobe,            // 03 startle
+    &bell,              // 04 bells      active2
+    &melodic,           // 05 melodics   active3
+    &insects,           // 06 insects    ambient2
+    &wavez,             // 07 weather    ambient1
+    &rotating,          // 08 melodic    active3
+    &lightning,         // 09 startle    
+    &wind,              // 0A winds      ambient3
+    &blinkDot,          // 0B winds      ambient3
+    &twinkleLights,     // 0C winds      ambient3
+    &strobeRand,        // 0D startle
+    &rotatingSlowly,    // 0E insect     ambient2
+    &rainCycle,         // 0F weather    ambient1
+    &quadRand,          // 10 birds      active1
+    &fire,              // 11 weather    ambient1
+    &flashing,          // 12 startle
+    &bell2              // 13 bells       active2
   };
 
   /**
