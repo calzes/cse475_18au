@@ -7,7 +7,7 @@
 constexpr uint8_t Active1::_localWeights[];
 
 uint8_t Active1::getNumRepeats() {
- return rand() % 5 + 4; // 4 - 8 repeats
+ return 10; // shorter than ambient, but still kind of high, not random because birds have brains
 }
 
 

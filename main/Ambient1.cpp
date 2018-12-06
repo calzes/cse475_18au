@@ -7,7 +7,7 @@
 constexpr uint8_t Ambient1::_localWeights[];
 
 uint8_t Ambient1::getNumRepeats() {
- return rand() % 5 + 4; // 4 - 8 repeats
+ return rand() % 12 + 10; // 11 - 20 repeats, random because nature is pretty random, also we want ambient to be longer than active
 }
 
 //weather lights: rainbow(0x01), wavez(0x07), rainCycle(0x0F), fire(0x11)

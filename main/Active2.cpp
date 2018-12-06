@@ -7,7 +7,7 @@
 constexpr uint8_t Active2::_localWeights[];
 
 uint8_t Active2::getNumRepeats() {
- return rand() % 5 + 4; // 4 - 8 repeats
+ return 8; // not random because bells are not random. Shorter than ambient, shorter than bird song
 }
 
 //Bell lights: &bell(0x04), bell2(0x13)

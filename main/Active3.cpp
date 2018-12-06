@@ -7,7 +7,7 @@
 constexpr uint8_t Active3::_localWeights[];
 
 uint8_t Active3::getNumRepeats() {
- return rand() % 5 + 4; // 4 - 8 repeats
+ return rand() % 5 + 4; // 4 - 8 repeats because less than ambient and sort of random
 }
 
 //melodic lights: melodic(0x05), rotating(0x08)

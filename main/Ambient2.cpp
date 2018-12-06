@@ -7,7 +7,8 @@
 constexpr uint8_t Ambient2::_localWeights[];
 
 uint8_t Ambient2::getNumRepeats() {
- return rand() % 5 + 4; // 4 - 8 repeats
+    return rand() % 6 + 10; // 10-15 repeats, random because nature is pretty random,
+    //want it to be longer than active but shorter than other ambient 
 }
 
 //Insect lights: insects(0x06), rotatingSlowly(0x0E)

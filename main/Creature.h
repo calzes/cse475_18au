@@ -132,6 +132,8 @@ class Creature {
     return _creatureDistances;
   }
 
+  uint8_t updateThreshold();
+
   State* createState(uint8_t stateID);
 
   // Run after construction but before loop.

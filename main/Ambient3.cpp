@@ -7,7 +7,7 @@
 constexpr uint8_t Ambient3::_localWeights[];
 
 uint8_t Ambient3::getNumRepeats() {
- return rand() % 5 + 4; // 4 - 8 repeats
+ return rand() % 11 + 10; // 10-20 repeats random
 }
 
 //wind lights: wind(0x0A), blinkDot(0x0B), twinkleLights(0x0C)
